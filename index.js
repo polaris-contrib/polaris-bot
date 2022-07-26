@@ -125,7 +125,17 @@ function buildIssueComment(issues, lastWeekIssues, totalBugIssues) {
 
 
     // 记录本周关闭的 issue 数量
-    const closeIssue = issues.filter((item) => item.state === 'closed');
+    const closeIssue = issues.filter((item) => item.state === 'closed').filter((item) => {
+        let isWeekly = false
+        item.labels.forEach((l) => {
+            if (isWeekly) {
+                return
+            }
+            isWeekly = l.name === "weekly-report"
+        })
+
+        return !isWeekly
+    });
     if (closeIssue.length > 0) {
         closeIssue.forEach((item) => {
             closeIssueStr += `- :yum: [#${item.number}](${item.html_url}) ${item.title.replace(/\n/g, ' ')}\n`;
@@ -133,7 +143,17 @@ function buildIssueComment(issues, lastWeekIssues, totalBugIssues) {
     }
 
     // 记录本周新增的 issue 数量
-    const openIssue = issues.filter((item) => item.state === 'open');
+    const openIssue = issues.filter((item) => item.state === 'open').filter((item) => {
+        let isWeekly = false
+        item.labels.forEach((l) => {
+            if (isWeekly) {
+                return
+            }
+            isWeekly = l.name === "weekly-report"
+        })
+
+        return !isWeekly
+    });
     if (openIssue.length > 0) {
         openIssue.forEach((item) => {
             openIssueStr += `- :bug: [#${item.number}](${item.html_url}) ${item.title.replace(/\n/g, ' ')}\n`;
